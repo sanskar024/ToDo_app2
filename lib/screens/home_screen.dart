@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo/dashboard/title_task.dart';
 import 'package:todo/screens/messages.dart';
 import 'package:todo/screens/notification.dart';
 import 'package:todo/screens/profile.dart';
@@ -235,7 +236,7 @@ completed.sort(
 
                     return Container(
                       width: 150,
-                      margin: const EdgeInsets.only(right: 12),
+                      margin: const EdgeInsets.only(right: 8),
                       padding: const EdgeInsets.all(6),
 
                       decoration: BoxDecoration(
@@ -332,141 +333,38 @@ completed.sort(
 
               const SizedBox(height: 12),
 
-              Expanded(
-                child: ListView.builder(
-                  itemCount: ongoing.length,
-                  itemBuilder: (context, index) {
+             Expanded(
+  child: ListView.builder(
+    itemCount: ongoing.length,
+    itemBuilder: (context, index) {
 
-                    final task = ongoing[index];
+      final task = ongoing[index];
 
-                    return Dismissible(
+      String dueText = task['due_date'] != null
+          ? "Due on : ${DateTime.parse(task['due_date']).day} ${_monthName(DateTime.parse(task['due_date']).month)}"
+          : "No due date";
 
-  key: Key(task['id']),
+      return TaskTile(
 
-  direction: DismissDirection.horizontal,
+        task: task,
 
-  /// SWIPE RIGHT → COMPLETE
-  background: Container(
-    alignment: Alignment.centerLeft,
-    padding: const EdgeInsets.only(left: 20),
-    color: Colors.green,
-    child: const Icon(Icons.check,color: Colors.white),
+        avatars: overlappingAvatars(),
+
+        dueText: dueText,
+
+        onComplete: (){
+          provider.completeTask(task['id']);
+        },
+
+        onDelete: (){
+          provider.deleteTask(task['id']);
+        },
+
+      );
+
+    },
   ),
-
-  /// SWIPE LEFT → DELETE
-  secondaryBackground: Container(
-    alignment: Alignment.centerRight,
-    padding: const EdgeInsets.only(right: 20),
-    color: Colors.red,
-    child: const Icon(Icons.delete,color: Colors.white),
-  ),
-
-  confirmDismiss: (direction) async {
-
-    if (direction == DismissDirection.startToEnd) {
-
-      /// COMPLETE TASK
-      provider.completeTask(task['id']);
-      return true;
-
-    } else {
-
-      /// DELETE TASK
-      provider.deleteTask(task['id']);
-      return true;
-
-    }
-
-  },
-
-  child: Container(
-    padding: const EdgeInsets.all(16),
-    margin: const EdgeInsets.only(bottom: 12),
-
-    decoration: BoxDecoration(
-      color: const Color(0xFF455A64),
-      borderRadius: BorderRadius.circular(18),
-    ),
-
-    child: Row(
-      children: [
-
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Text(
-                task['title'],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                ),
-              ),
-
-              const SizedBox(height:6),
-
-              const Text(
-                "Team members",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                ),
-              ),
-              
-              const SizedBox(width:10),
-              
-              overlappingAvatars(),
-
-              const SizedBox(height:8),
-
-              Text(
-                task['due_date'] != null
-                    ? "Due on : ${DateTime.parse(task['due_date']).day} ${_monthName(DateTime.parse(task['due_date']).month)}"
-                    : "No due date",
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
-                ),
-              )
-
-            ],
-          ),
-        ),
-
-        Stack(
-          alignment: Alignment.center,
-          children: [
-
-            SizedBox(
-              height: 55,
-              width: 55,
-              child: CircularProgressIndicator(
-                value: task['progress'] / 100,
-                strokeWidth: 6,
-                color: const Color(0xFFFED36A),
-                backgroundColor: Colors.white24,
-              ),
-            ),
-
-            Text(
-              "${task['progress']}%",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-              ),
-            )
-
-          ],
-        )
-
-      ],
-    ),
-  ),
-);
-                  },
-                ),
-              )
+),
 
             ],
           ),

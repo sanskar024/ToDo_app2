@@ -9,7 +9,7 @@ VIDEO LINK->
 
 Authentication
 
-* Email and password login
+* Email and password login using Supabase
 * User registration
 * Logout functionality
 * Session persistence using Supabase

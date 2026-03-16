@@ -3,7 +3,7 @@
 Mini TaskHub is a Flutter-based task management application that allows users to manage their daily tasks efficiently. The app includes authentication, task creation, deletion, completion tracking, and editing functionality. Data is stored using Supabase as the backend database.
 
 ---
-VIDEO LINK-> 
+VIDEO LINK-> https://1drv.ms/v/c/7f7a318566d578a5/IQB1icxfw8M0SYldsXku3G7bAagex04s7PFRsXrBTLX5dTU?e=esNllS
 ---
 # Features
 

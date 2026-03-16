@@ -1,15 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:todo/screens/home_screen.dart';
+import 'package:todo/screens/login_page.dart';
 
-
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    checkSession();
+  }
+
+  void checkSession() async {
+
+    await Future.delayed(const Duration(seconds: 2));
+
+    final session = Supabase.instance.client.auth.currentSession;
+
+    if(!mounted) return;
+
+    if(session != null){
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const HomeScreen()),
+      );
+
+    }else{
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
+      );
+
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1E1E), // dark background
+      backgroundColor: const Color(0xFF1E1E1E),
 
       body: SafeArea(
         child: Padding(
@@ -21,50 +59,43 @@ class SplashScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              /// Logo Row
+              /// Logo
               Image.asset(
                 "assets/images/logo.png",
-                
               ),
-              
-             
-              
-              
 
               const SizedBox(height: 30),
 
               /// Illustration
               Center(
-  child: Stack(
-    alignment: Alignment.center,
-    children: [
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
 
-      /// White background card
-      Container(
-        width: 260,
-        height: 200,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
+                    Container(
+                      width: 260,
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
 
-      /// Illustration image on top
-      Image.asset(
-        "assets/images/pana.png",
-        width: 200,
-        height: 230,
-      ),
+                    Image.asset(
+                      "assets/images/pana.png",
+                      width: 200,
+                      height: 230,
+                    ),
 
-    ],
-  ),
-),
+                  ],
+                ),
+              ),
 
               const SizedBox(height: 10),
 
               /// Heading
-              RichText(
-                text: const TextSpan(
+               RichText(
+                text: TextSpan(
                   children: [
 
                     TextSpan(
@@ -106,13 +137,16 @@ class SplashScreen extends StatelessWidget {
                   ),
 
                   onPressed: () {
+
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const HomeScreen(),
+                        builder: (_) => const LoginScreen(),
                       ),
                     );
+
                   },
+
                   child: const Text(
                     "Let's Start",
                     style: TextStyle(
@@ -121,6 +155,7 @@ class SplashScreen extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
+
                 ),
               ),
 
